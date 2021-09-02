@@ -1,4 +1,4 @@
-package ru.demi.algorithms.graphs.disjoint_sets;
+package ru.demi.algorithms.graphs.disjoint_set;
 
 import org.junit.jupiter.api.Test;
 
