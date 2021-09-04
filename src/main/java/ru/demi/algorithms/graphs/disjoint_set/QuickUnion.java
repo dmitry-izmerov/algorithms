@@ -1,6 +1,6 @@
 package ru.demi.algorithms.graphs.disjoint_set;
 
-public class QuickUnion {
+public class QuickUnion implements DisjointSet {
     private final int[] roots;
 
     public QuickUnion(int length) {

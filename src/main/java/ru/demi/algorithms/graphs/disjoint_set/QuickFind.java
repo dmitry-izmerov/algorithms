@@ -1,6 +1,6 @@
 package ru.demi.algorithms.graphs.disjoint_set;
 
-public class QuickFind {
+public class QuickFind implements DisjointSet {
     private final int[] roots;
 
     public QuickFind(int length) {
@@ -10,10 +10,12 @@ public class QuickFind {
         }
     }
 
+    @Override
     public int findRoot(int vertex) {
         return roots[vertex];
     }
 
+    @Override
     public void union(int vertexA, int vertexB) {
         int rootA = findRoot(vertexA);
         int rootB = findRoot(vertexB);
@@ -24,6 +26,7 @@ public class QuickFind {
         }
     }
 
+    @Override
     public boolean isConnected(int vertexA, int vertexB) {
         return findRoot(vertexA) == findRoot(vertexB);
     }
