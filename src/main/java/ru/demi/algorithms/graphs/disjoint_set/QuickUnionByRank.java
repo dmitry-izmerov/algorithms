@@ -16,13 +16,11 @@ public class QuickUnionByRank extends QuickUnion {
         int rootA = findRoot(vertexA);
         int rootB = findRoot(vertexB);
         if (rootA != rootB) {
-            if (ranks[rootA] > ranks[rootB]) {
+            if (ranks[rootA] >= ranks[rootB]) {
                 roots[rootB] = rootA;
-            } else if (ranks[rootB] > ranks[rootA]) {
-                roots[rootA] = rootB;
+                ranks[rootA] += ranks[rootB];
             } else {
-                roots[rootB] = rootA;
-                ranks[rootA] += 1;
+                roots[rootA] = rootB;
             }
         }
     }
