@@ -43,15 +43,18 @@ public class FirstBadVersion extends VersionControl {
         var foundIndex = 0;
         while (oldIndex != foundIndex && foundIndex < n) {
             var subList = versions.subList(foundIndex, versions.size());
+            System.out.println("sublist = " + subList);
             oldIndex = foundIndex;
             var sizeDiff = versions.size() - subList.size();
-            foundIndex = sizeDiff + findIndex(subList);
-            if (foundIndex < 0) {
-                return 1;
+            System.out.println("sizeDiff = " + sizeDiff);
+            foundIndex = sizeDiff + findIndex(subList) + 1;
+            System.out.println("foundIndex = " + foundIndex);
+            if (foundIndex == 0) {
+                return oldIndex;
             }
         }
 
-        return foundIndex + 2;
+        return foundIndex;
     }
 
     private int findIndex(List<Integer> versions) {
@@ -59,10 +62,18 @@ public class FirstBadVersion extends VersionControl {
         var high = versions.size() - 1;
         while (true) {
             var mid = (low + high) / 2;
+            System.out.println("mid = " + mid);
             var midValue = this.isBadVersion(versions.get(mid));
-            if (midValue) {
+            System.out.println("midValue = " + midValue);
+
+            if (mid == low && midValue) {
+                System.out.println("in if (mid == low && midValue) {");
+                return -1;
+            } else if (midValue) {
+                System.out.println("in } else if (midValue) {");
                 high = mid - 1;
             } else {
+                System.out.println("in else");
                 return mid;
             }
         }
