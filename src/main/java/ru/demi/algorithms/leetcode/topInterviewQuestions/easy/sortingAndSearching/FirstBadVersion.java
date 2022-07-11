@@ -1,10 +1,5 @@
 package ru.demi.algorithms.leetcode.topInterviewQuestions.easy.sortingAndSearching;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 /**
  * You are a product manager and currently leading a team to develop a new product.
  * Unfortunately, the latest version of your product fails the quality check.
@@ -19,12 +14,12 @@ import java.util.stream.IntStream;
  * You should minimize the number of calls to the API.
  *
  * Constraints:
- * - 1 <= bad <= n <= 231 - 1
+ * - 1 <= bad <= n <= 2^31 - 1
  */
 public class FirstBadVersion extends VersionControl {
 
-    public FirstBadVersion(Map<Integer, Boolean> values) {
-        super(values);
+    public FirstBadVersion(int bad) {
+        super(bad);
     }
 
     public int firstBadVersion(int n) {
@@ -35,60 +30,40 @@ public class FirstBadVersion extends VersionControl {
             return 1;
         }
 
-        var versions = IntStream.rangeClosed(1, n)
-            .boxed()
-            .collect(Collectors.toList());
-
-        var oldIndex = Integer.MIN_VALUE;
-        var foundIndex = 0;
-        while (oldIndex != foundIndex && foundIndex < n) {
-            var subList = versions.subList(foundIndex, versions.size());
-            System.out.println("sublist = " + subList);
-            oldIndex = foundIndex;
-            var sizeDiff = versions.size() - subList.size();
-            System.out.println("sizeDiff = " + sizeDiff);
-            foundIndex = sizeDiff + findIndex(subList) + 1;
-            System.out.println("foundIndex = " + foundIndex);
-            if (foundIndex == 0) {
-                return oldIndex;
-            }
-        }
-
-        return foundIndex;
+        return findIndex(n);
     }
 
-    private int findIndex(List<Integer> versions) {
-        var low = 0;
-        var high = versions.size() - 1;
-        while (true) {
-            var mid = (low + high) / 2;
-            System.out.println("mid = " + mid);
-            var midValue = this.isBadVersion(versions.get(mid));
-            System.out.println("midValue = " + midValue);
-
-            if (mid == low && midValue) {
-                System.out.println("in if (mid == low && midValue) {");
-                return -1;
-            } else if (midValue) {
-                System.out.println("in } else if (midValue) {");
-                high = mid - 1;
-            } else {
-                System.out.println("in else");
-                return mid;
+    private int findIndex(long versions) {
+        var low = 1L;
+        var trueHigh = versions;
+        while (trueHigh - low > 1) {
+            var high = trueHigh;
+            while (low < high) {
+                var mid = (low + high) / 2;
+                var midValue = isBadVersion((int) mid);
+                if (midValue) {
+                    trueHigh = mid;
+                    high = mid - 1;
+                } else {
+                    low = mid;
+                    break;
+                }
             }
         }
+        return (int) trueHigh;
     }
 }
 
 // Provided in runtime.
 class VersionControl {
-    private Map<Integer, Boolean> values;
 
-    public VersionControl(Map<Integer, Boolean> values) {
-        this.values = values;
+    private final int bad;
+
+    public VersionControl(int bad) {
+        this.bad = bad;
     }
 
     boolean isBadVersion(int version) {
-        return values.get(version);
+        return version >= bad;
     }
 }
