@@ -2,6 +2,7 @@ package ru.demi.algorithms.leetcode.topInterview150.heap;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -29,23 +30,32 @@ import java.util.PriorityQueue;
 public class FindKPairsWithSmallestSums {
 
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
-        var pq = new PriorityQueue<>(Comparator.<List<Integer>>comparingInt(l -> l.get(0) + l.get(1)).reversed());
-        for (int n1 : nums1) {
-            for (int n2 : nums2) {
-                var list = new ArrayList<Integer>(2);
-                list.add(n1);
-                list.add(n2);
-                pq.add(list);
-                if (pq.size() > k) {
-                    pq.remove();
-                }
+        var pq = new PriorityQueue<>(Comparator.<Item>comparingInt(v -> v.sum));
+        var visited = new HashSet<Idx>();
+        pq.add(new Item(nums1[0] + nums2[0], 0, 0));
+        visited.add(new Idx(0, 0));
+
+        var res = new ArrayList<List<Integer>>(k);
+        while (k-- > 0 && !pq.isEmpty()) {
+            var item = pq.remove();
+            var i = item.i;
+            var j = item.j;
+            res.add(List.of(nums1[i], nums2[j]));
+
+            if (i + 1 < nums1.length && !visited.contains(new Idx(i + 1, j))) {
+                pq.add(new Item(nums1[i + 1] + nums2[j], i + 1, j));
+                visited.add(new Idx(i + 1, j));
+            }
+
+            if (j + 1 < nums2.length && !visited.contains(new Idx(i, j + 1))) {
+                pq.add(new Item(nums1[i] + nums2[j + 1], i, j + 1));
+                visited.add(new Idx(i, j + 1));
             }
         }
 
-        var res = new ArrayList<List<Integer>>(pq.size());
-        while (!pq.isEmpty()) {
-            res.add(pq.remove());
-        }
         return res;
     }
+
+    record Item(int sum, int i, int j) {}
+    record Idx(int i, int j) {}
 }
