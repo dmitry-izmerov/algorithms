@@ -23,4 +23,25 @@ package ru.demi.algorithms.leetcode.topInterview150.math;
  */
 public class Pow {
 
+    public double myPow(double x, int n) {
+        if (n == 0) return 1;
+
+        var num = (long) n;
+        if (num < 0) {
+            num *= -1;
+            x = 1 / x;
+        }
+
+        var res = 1d;
+        while (num != 0) {
+            if (num % 2 == 1) {
+                res *= x;
+                num--;
+            }
+            x = x * x;
+            num = num / 2;
+        }
+
+        return res;
+    }
 }
